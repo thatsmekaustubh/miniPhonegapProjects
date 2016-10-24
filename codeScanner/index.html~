@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    	<title>twd</title>
+	<script type="text/javascript" charset="utf-8" src="jquery_1.5.2.min.js"></script>
+</head>
+
+<body>
+    <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+
+    <script type="text/javascript">
+	function process() {
+		cordova.plugins.barcodeScanner.scan(
+			function(result) {
+				alert("We got a barcode\n" +
+					"Result: " + result.text + "\n" +
+					"Format: " + result.format + "\n" +
+					"Cancelled: " + result.cancelled);
+				if(result.cancelled==false){
+					var apiReq="http://180.179.103.250/17/twdEcoSystem/miniAppServer/barCodeDemoAppApiServer/index.php?p1="+result.text+"&p2="+result.format;
+					$.get(apiReq,	function(result) {
+								alert( "Server response (1): "+result.data );
+							}
+					)
+					.done(		function(result) {
+								alert( "Server response (2): "+result.data );
+							}
+					)
+					.fail(		function(e){
+								alert("Server Updation failed!"+e);
+							}
+					);
+				}
+			},
+			function(error) {
+				alert("Scanning failed: " + error);
+			}
+		);		
+	}
+        function onDeviceReady() {
+            process();
+        }
+
+        document.addEventListener('deviceready', onDeviceReady, true);
+    </script>
+
+    <button onclick="process();">Scan</button>
+</body>
+
+</html>
